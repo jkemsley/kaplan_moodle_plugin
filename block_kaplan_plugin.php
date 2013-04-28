@@ -1,27 +1,4 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
-//
-// Moodle is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Moodle is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
-/**
- * Newblock block caps.
- *
- * @package    block_newblock
- * @copyright  Daniel Neis <danielneis@gmail.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 defined('MOODLE_INTERNAL') || die();
 
 class block_kaplan_plugin extends block_base {
@@ -55,10 +32,6 @@ class block_kaplan_plugin extends block_base {
         $usersurl .= '&moodlewsrestformat=json';
         $usersurl .= '&wstoken=443f6ba99e6e86ffc2fca447eebd1e49';
 
-        $this->page->requires->js('/blocks/kaplan_plugin/kaplan_plugin.js');
-        $this->page->requires->js_function_call('kaplan_loadCourseTable', array('kaplan_course_table', $coursesurl));
-        $this->page->requires->js_function_call('kaplan_loadUserTable', array('kaplan_user_table', $usersurl));
-
         $this->content = new stdClass();
         $this->content->items = array();
         $this->content->icons = array();
@@ -74,9 +47,10 @@ class block_kaplan_plugin extends block_base {
         $this->content->text .= '<h3>Courses</h3>';
         $this->content->text .= '<table id="kaplan_course_table">';
         $this->content->text .= '<tr>';
-        $this->content->text .= '<th>Id</th><th>Name</th>';
+        $this->content->text .= '<th>Id</th><th>Name</th><th>Users enrolled</th>';
         $this->content->text .= '</tr>';
         $this->content->text .= '</table>';
+        $this->content->text .= '<div class="courseloading_image"><img src="'.$CFG->wwwroot.'/pix/i/loading_small.gif"/></div>';
 
         $this->content->text .= '<h3>Users</h3>';
         $this->content->text .= '<table id="kaplan_user_table">';
@@ -84,6 +58,7 @@ class block_kaplan_plugin extends block_base {
         $this->content->text .= '<th>Id</th><th>Fullname</th>';
         $this->content->text .= '</tr>';
         $this->content->text .= '</table>';
+        $this->content->text .= '<div class="userloading_image"><img src="'.$CFG->wwwroot.'/pix/i/loading_small.gif"/></div>';
         // if (empty($currentcontext)) {
         //     return $this->content;
         // }
@@ -94,6 +69,11 @@ class block_kaplan_plugin extends block_base {
         if (! empty($this->config->text)) {
             $this->content->text .= $this->config->text;
         }
+
+        $this->page->requires->js('/blocks/kaplan_plugin/kaplan_plugin.js');
+        $this->page->requires->js_function_call('kaplan_loadCourseTable', array('kaplan_course_table', $coursesurl));
+        $this->page->requires->js_function_call('kaplan_loadUserTable', array('kaplan_user_table', $usersurl));
+
 
         return $this->content;
     }
@@ -113,13 +93,6 @@ class block_kaplan_plugin extends block_base {
           return false;
     }
 
-    function has_config() {return true;}
+    function has_config() {return flase;}
 
-    public function cron() {
-            mtrace( "Hey, my cron script is running" );
-             
-                 // do something
-                  
-                      return true;
-    }
 }

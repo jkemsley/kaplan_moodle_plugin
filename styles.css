@@ -1,0 +1,8 @@
+#kaplan_course_table, #kaplan_user_table {
+	display: none;
+}
+
+.courseloading_image img, .userloading_image img{
+	display: block;
+	margin: 0 auto;
+}

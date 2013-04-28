@@ -14,11 +14,14 @@ function kaplan_loadCourseTable(eid, url) {
                     return;
                 }
                 for (i=0, l=courses.length; i < l; ++i) {
-                	html += '<tr>'
-                    html += '<td>' + courses[i].id + '</td><td>' +
-                            courses[i].fullname + '</td></tr>';
+                	html += '<tr>';
+                    html += '<td>' + courses[i].id + '</td>';
+                    html += '<td>' + courses[i].fullname + '</td>';
+                    html += '<td>' + courses[i].users_enrolled + '</td>';
+                    html += '</tr>';
                 }
-                Y.one('#' + eid).append(html);
+                Y.one('.courseloading_image').setStyle('display', 'none');
+                Y.one('#' + eid).append(html).setStyle('display', 'table');
             },
             failure : function (x,o) {
                 Y.log("Async call failed!");
@@ -48,7 +51,8 @@ function kaplan_loadUserTable(eid, url) {
                     html += '<td>' + users[i].id + '</td><td>' +
                             users[i].fullname + '</td></tr>';
                 }
-                Y.one('#' + eid).append(html);
+                Y.one('.userloading_image').setStyle('display', 'none');
+                Y.one('#' + eid).append(html).setStyle('display', 'table');
             },
             failure : function (x,o) {
                 Y.log("Async call failed!");

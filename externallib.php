@@ -1,25 +1,4 @@
 <?php
-
-// Moodle is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Moodle is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
-/**
- * External Web Service Template
- *
- * @package    localwstemplate
- * @copyright  2011 Moodle Pty Ltd (http://moodle.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 require_once($CFG->libdir . "/externallib.php");
 
 class block_kaplan_plugin_external extends external_api {
@@ -49,6 +28,13 @@ class block_kaplan_plugin_external extends external_api {
         //create return value
         $coursesinfo = array();
         foreach ($courses as $course) {
+
+            $sql = "select count(DISTINCT ue.userid) as enrols
+                    from {user_enrolments} as ue 
+                    inner join {enrol} as e on e.id = ue.enrolid
+                    where e.courseid = $course->id";
+
+            $totalusers = (int)$DB->count_records_sql($sql);
             
             // now security checks
             $context = context_course::instance($course->id, IGNORE_MISSING);
@@ -65,6 +51,7 @@ class block_kaplan_plugin_external extends external_api {
             $courseinfo = array();
             $courseinfo['id'] = $course->id;
             $courseinfo['fullname'] = $course->fullname;
+            $courseinfo['users_enrolled'] = $totalusers;
 
             //some field should be returned only if the user has update permission
             $courseadmin = has_capability('moodle/course:update', $context);
@@ -87,7 +74,8 @@ class block_kaplan_plugin_external extends external_api {
             new external_single_structure(
                 array(
                     'id' => new external_value(PARAM_INT, 'course ID'),
-                    'fullname' => new external_value(PARAM_TEXT, 'course Name')
+                    'fullname' => new external_value(PARAM_TEXT, 'course Name'),
+                    'users_enrolled' => new external_value(PARAM_INT, 'users enrolled')
                 ), 'course'
             )
         );
