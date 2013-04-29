@@ -38,15 +38,15 @@ class block_kaplan_plugin_external extends external_api {
             
             // now security checks
             $context = context_course::instance($course->id, IGNORE_MISSING);
-            try {
-                self::validate_context($context);
-            } catch (Exception $e) {
-                $exceptionparam = new stdClass();
-                $exceptionparam->message = $e->getMessage();
-                $exceptionparam->courseid = $course->id;
-                throw new moodle_exception('errorcoursecontextnotvalid', 'webservice', '', $exceptionparam);
-            }
-            require_capability('moodle/course:view', $context);
+            // try {
+            //     self::validate_context($context);
+            // } catch (Exception $e) {
+            //     $exceptionparam = new stdClass();
+            //     $exceptionparam->message = $e->getMessage();
+            //     $exceptionparam->courseid = $course->id;
+            //     throw new moodle_exception('errorcoursecontextnotvalid', 'webservice', '', $exceptionparam);
+            // }
+            // require_capability('moodle/course:view', $context);
 
             $courseinfo = array();
             $courseinfo['id'] = $course->id;
@@ -107,15 +107,15 @@ class block_kaplan_plugin_external extends external_api {
             context_instance_preload($user);
             $usercontext = context_user::instance($user->id, IGNORE_MISSING);
             
-            try {
-                self::validate_context($usercontext);
-            } catch (Exception $e) {
-                $exceptionparam = new stdClass();
-                $exceptionparam->message = $e->getMessage();
-                $exceptionparam->userid = $user->id;
-                throw new moodle_exception('errorcoursecontextnotvalid', 'webservice', '', $exceptionparam);
-            }
-            require_capability('moodle/user:viewdetails', $usercontext);
+            // try {
+            //     self::validate_context($usercontext);
+            // } catch (Exception $e) {
+            //     $exceptionparam = new stdClass();
+            //     $exceptionparam->message = $e->getMessage();
+            //     $exceptionparam->userid = $user->id;
+            //     throw new moodle_exception('errorcoursecontextnotvalid', 'webservice', '', $exceptionparam);
+            // }
+            // require_capability('moodle/user:viewdetails', $usercontext);
 
             $userinfo = array();
             $userinfo['id'] = $user->id;
