@@ -1,5 +1,6 @@
 function kaplan_loadCourseTable(eid, url) {
 
+    //Set the callback for yui ajax call
 	var callback = {
         timeout : 5000,
         on : {
@@ -11,16 +12,24 @@ function kaplan_loadCourseTable(eid, url) {
                 }
                 catch (e) {
                     Y.log("JSON Parse failed!");
+                    Y.one('.courseloading_image').setHTML('<p class="kaplan_error">Notice: Failed to parse json</p>');
                     return;
                 }
 
+                // Has moodle given us an unexpected response
                 if(courses instanceof Array === false) {
                     Y.one('.courseloading_image').setHTML('<p class="kaplan_notice">Notice: You do not have access to use this service</p>');
                     return;
                 }
 
-                for (i=0, l=courses.length; i < l; ++i) {
+                //Have we courses?
+                if(courses.length === 0) {
+                    Y.one('.courseloading_image').setHTML('<p class="kaplan_empty">No courses</p>');
+                    return;
+                }
 
+                // Loop through courses and create html
+                for (i=0, l=courses.length; i < l; ++i) {
                     var url = M.cfg.wwwroot + '/course/view.php?id=' + courses[i].id;
                 	html += '<tr>';
                     html += '<td>' + courses[i].id + '</td>';
@@ -28,12 +37,15 @@ function kaplan_loadCourseTable(eid, url) {
                     html += '<td class="kap_table_ue">' + courses[i].users_enrolled + '</td>';
                     html += '</tr>';
                 }
+
+                // Hide loading gif and append html to table
                 Y.one('.courseloading_image').setStyle('display', 'none');
                 Y.one('#' + eid + ' tbody').append(html);
                 Y.one('#' + eid).setStyle('display', 'table');
             },
             failure : function (x,o) {
                 Y.log("Async call failed!");
+                Y.one('.courseloading_image').setHTML('<p class="kaplan_error">Notice: Service call failed</p>');
             }
         }
     };
@@ -53,14 +65,23 @@ function kaplan_loadUserTable(eid, url) {
                 }
                 catch (e) {
                     Y.log("JSON Parse failed!");
+                    Y.one('.userloading_image').setHTML('<p class="kaplan_error">Notice: Failed to parse json</p>');
                     return;
                 }
 
+                // Has moodle given us an unexpected response
                 if(users instanceof Array === false) {
                     Y.one('.userloading_image').setHTML('<p class="kaplan_notice">Notice: You do not have access to use this service</p>');
                     return;
                 }
 
+                //Have we users?
+                if(users.length === 0) {
+                    Y.one('.userloading_image').setHTML('<p class="kaplan_empty">No users</p>');
+                    return;
+                }
+
+                // Loop through users and create html
                 for (i=0, l=users.length; i < l; ++i) {
                     var url = M.cfg.wwwroot + '/user/profile.php?id=' + users[i].id;
                 	html += '<tr>'
@@ -68,12 +89,15 @@ function kaplan_loadUserTable(eid, url) {
                     html += '<td><a href="' + url + '">' + users[i].fullname + '</a></td>';
                     html += '</tr>';
                 }
+
+                // Hide loading gif and append html to table
                 Y.one('.userloading_image').setStyle('display', 'none');
                 Y.one('#' + eid).setStyle('display', 'table');
                 Y.one('#' + eid + ' tbody').append(html);
             },
             failure : function (x,o) {
                 Y.log("Async call failed!");
+                Y.one('.userloading_image').setHTML('<p class="kaplan_error">Notice: Service call failed</p>');
             }
         }
     };

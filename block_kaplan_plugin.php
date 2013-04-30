@@ -24,13 +24,27 @@ class block_kaplan_plugin extends block_base {
         $this->content->icons = array();
         $this->content->footer = '';
 
+        if (!isloggedin() or isguestuser()) {
+            return '';      // Never useful unless you are logged in as real users
+        }
+
+        if(!$CFG->enablewebservices) {
+            $this->content->text = '<p class="kaplan_notice">'.get_string('wsnotenabled', 'block_kaplan_plugin').'</p>';
+            return $this->content;
+        }
+
+        if(strpos($CFG->webserviceprotocols, 'rest') === false) {
+            $this->content->text = '<p class="kaplan_notice">'.get_string('restnotenabled', 'block_kaplan_plugin').'</p>';
+            return $this->content;
+        }
+
         $context = context_system::instance();
 
         //check if the service exists and is enabled
         $service = $DB->get_record('external_services', array('component' => 'block_kaplan_plugin', 'enabled' => 1));
         if (empty($service)) {
             // will print message if no service found
-            $this->content->text = '<p>Notice: Kaplan plugin webservice not found</p>';
+            $this->content->text = '<p class="kaplan_notice">'.get_string('wsnotfound', 'block_kaplan_plugin').'</p>';
             return $this->content;
         }
 
@@ -46,29 +60,31 @@ class block_kaplan_plugin extends block_base {
                     and externalserviceid = $service->id 
                     and sid != '" . session_id() . "'";
             $tokens = $DB->get_records_sql($oldtokensql);
-
             foreach ($tokens as $t) {
                 $DB->delete_records('external_tokens', array('sid'=>$t->sid, 'userid' => $USER->id));
             }
 
             $newtoken = new stdClass;
+            //Check to see if the service has any capabilities and check user has them
             if (empty($service->requiredcapability) || has_capability($service->requiredcapability, $context, $USER->id)) {
                 $newtoken->externalserviceid = $service->id;
             } else {
-                $this->content->text = '<p class="kaplan_notice">Notice: You do not have access to use this service</p>';
+                $this->content->text = '<p class="kaplan_notice">'.get_string('noaccess', 'block_kaplan_plugin').'</p>';
                 return $this->content;
             }
 
+            //Attempt to create a unique token
             $numtries = 0;
             do {
                 $numtries ++;
                 $generatedtoken = md5(uniqid(rand(),1));
                 if ($numtries > 5){
-                    $this->content->text = '<p class="kaplan_notice">Notice: Token generation failed</p>';
+                    $this->content->text = '<p class="kaplan_notice">'.get_string('tokenfail', 'block_kaplan_plugin').'</p>';
                     return $this->content;
                 }
             } while ($DB->record_exists('external_tokens', array('token'=>$generatedtoken)));
 
+            //Set the details of the new token
             $newtoken->token = $generatedtoken;
             $newtoken->tokentype = EXTERNAL_TOKEN_PERMANENT;
             $newtoken->userid = $USER->id;
@@ -77,10 +93,12 @@ class block_kaplan_plugin extends block_base {
             $newtoken->timecreated = time();
             $newtoken->sid = session_id();
             $newtoken->validuntil = 0;
+
+            //Set and insert token in db
             $token = $newtoken;
             $DB->insert_record('external_tokens', $newtoken);
         } elseif (empty($token)) { //No token and unable to create one
-            $this->content->text = '<p class="kaplan_error">You must be logged in to view this information</p>';
+            $this->content->text = '<p class="kaplan_notice">'.get_string('tokennotice', 'block_kaplan_plugin').'</p>';
             return $this->content;
         }
         
@@ -132,13 +150,7 @@ class block_kaplan_plugin extends block_base {
 
     // my moodle can only have SITEID and it's redundant here, so take it away
     public function applicable_formats() {
-        return array('all' => false,
-                     'site' => true,
-                     'site-index' => true,
-                     'course-view' => true, 
-                     'course-view-social' => false,
-                     'mod' => true, 
-                     'mod-quiz' => false);
+        return array('all' => true);
     }
 
     public function instance_allow_multiple() {
@@ -146,6 +158,4 @@ class block_kaplan_plugin extends block_base {
     }
 
     function has_config() {return false;}
-
-
 }
