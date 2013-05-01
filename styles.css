@@ -4,9 +4,16 @@
 	border-bottom: 2px solid #c0c0c0;
 }
 
+#kaplan_courses, #kaplan_users {
+	overflow: auto;
+	margin-bottom: 10px;
+}
+
 .kaplan_table {
 	display: none;
+	table-layout: fixed;
 	width: 100%;
+	margin-bottom: 3px;
 }
 
 	.kaplan_table th {
@@ -17,7 +24,15 @@
 	}
 
 		.kaplan_table th.kap_table_ue {
-			width: 10%;
+			width: 35%;
+		}
+
+		.kaplan_table th.kap_table_id {
+			width: 20%;
+		}
+
+		.kaplan_table th.kap_table_name {
+			width: 50%;
 		}
 
 	.kaplan_table tr:nth-child(even) {
@@ -25,6 +40,7 @@
 	}
 
 	.kaplan_table td {
+		word-wrap: break-word;
 		padding: 5px;
 	}
 
@@ -36,6 +52,26 @@
 		.kaplan_table td.kap_table_ue {
 			text-align: center;
 		}
+
+#kaplan_courses_next, #kaplan_users_next {
+	display: none;
+	width: 20%;
+	float: right;
+	color: #38387D;
+	cursor: pointer;
+}
+
+#kaplan_courses_prev, #kaplan_users_prev {
+	display: none;
+	width: 20%;
+	float: left;
+	color: #38387D;
+	cursor: pointer;
+}
+
+	.kaplan_courses_btn:hover, .kaplan_users_btn:hover {
+		text-decoration: underline;
+	}
 
 
 	

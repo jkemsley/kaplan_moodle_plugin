@@ -1,5 +1,13 @@
-function kaplan_loadCourseTable(eid, url) {
+var cpage = 0;
+var upage = 0;
+var courseurl = '';
+var userurl = '';
 
+
+function kaplan_loadCourseTable(eid, url, page) {
+    courseurl = url;
+    url += '&page=' + page;
+    cpage = page;
     //Set the callback for yui ajax call
 	var callback = {
         timeout : 5000,
@@ -29,7 +37,7 @@ function kaplan_loadCourseTable(eid, url) {
                 }
 
                 // Loop through courses and create html
-                for (i=0, l=courses.length; i < l; ++i) {
+                for (i=0, l=courses.length - 1; i < l; ++i) {
                     var url = M.cfg.wwwroot + '/course/view.php?id=' + courses[i].id;
                 	html += '<tr>';
                     html += '<td>' + courses[i].id + '</td>';
@@ -40,6 +48,12 @@ function kaplan_loadCourseTable(eid, url) {
 
                 // Hide loading gif and append html to table
                 Y.one('.courseloading_image').setStyle('display', 'none');
+                if(page > 0) {
+                    Y.one('#kaplan_courses_prev').setStyle('display', 'block');
+                }
+                if(courses.length === 6) {
+                    Y.one('#kaplan_courses_next').setStyle('display', 'block');
+                }
                 Y.one('#' + eid + ' tbody').append(html);
                 Y.one('#' + eid).setStyle('display', 'table');
             },
@@ -52,12 +66,16 @@ function kaplan_loadCourseTable(eid, url) {
 	Y.io(url, callback);
 }
 
-function kaplan_loadUserTable(eid, url) {
+function kaplan_loadUserTable(eid, url, page) {
+    upage = page;
+    userurl = url;
+    url += '&page=' + page;
 
 	var callback = {
         timeout : 5000,
         on : {
             success : function (x,o) {
+
             	var html = '';
                 // Process the JSON data returned from the server
                 try {
@@ -82,7 +100,7 @@ function kaplan_loadUserTable(eid, url) {
                 }
 
                 // Loop through users and create html
-                for (i=0, l=users.length; i < l; ++i) {
+                for (i=0, l=users.length-1; i < l; ++i) {
                     var url = M.cfg.wwwroot + '/user/profile.php?id=' + users[i].id;
                 	html += '<tr>'
                     html += '<td>' + users[i].id + '</td>';
@@ -92,6 +110,13 @@ function kaplan_loadUserTable(eid, url) {
 
                 // Hide loading gif and append html to table
                 Y.one('.userloading_image').setStyle('display', 'none');
+
+                if(page > 0) {
+                    Y.one('#kaplan_users_prev').setStyle('display', 'block');
+                }
+                if(users.length === 11) {
+                    Y.one('#kaplan_users_next').setStyle('display', 'block');
+                }
                 Y.one('#' + eid).setStyle('display', 'table');
                 Y.one('#' + eid + ' tbody').append(html);
             },
@@ -102,4 +127,34 @@ function kaplan_loadUserTable(eid, url) {
         }
     };
 	Y.io(url, callback);
+}
+
+function kaplan_register_btns(ceid, ueid) {
+    Y.one('#kaplan_courses_next').on('click',  function(e) {
+        Y.one('#' + ceid + ' tbody').setHTML('');
+        Y.one('.courseloading_image').setStyle('display', 'block');
+        Y.all('.kaplan_courses_btn').setStyle('display', 'none');
+        kaplan_loadCourseTable(ceid, courseurl, cpage+1);
+    });
+
+    Y.one('#kaplan_courses_prev').on('click',  function(e) {
+        Y.one('#' + ceid + ' tbody').setHTML('');
+        Y.one('.courseloading_image').setStyle('display', 'block');
+        Y.all('.kaplan_courses_btn').setStyle('display', 'none');
+        kaplan_loadCourseTable(ceid, courseurl, cpage-1);
+    });
+
+    Y.one('#kaplan_users_next').on('click',  function(e) {
+        Y.one('#' + ueid + ' tbody').setHTML('');
+        Y.one('.userloading_image').setStyle('display', 'block');
+        Y.all('.kaplan_users_btn').setStyle('display', 'none');
+        kaplan_loadUserTable(ueid, userurl, upage+1);
+    });
+
+    Y.one('#kaplan_users_prev').on('click',  function(e) {
+        Y.one('#' + ueid + ' tbody').setHTML('');
+        Y.one('.userloading_image').setStyle('display', 'block');
+        Y.all('.kaplan_users_btn').setStyle('display', 'none');
+        kaplan_loadUserTable(ueid, userurl, upage-1);
+    });
 }

@@ -123,27 +123,35 @@ class block_kaplan_plugin extends block_base {
 
 
         // Add the tables and the loading gifs
+        $this->content->text .= '<div id="kaplan_courses">';
         $this->content->text .= '<h3>Courses</h3>';
         $this->content->text .= '<table id="kaplan_course_table" class="kaplan_table">';
         $this->content->text .= '<thead><tr>';
         $this->content->text .= '<th class="kap_table_id">Id</th><th class="kap_table_name">Name</th><th class="kap_table_ue">Users enrolled</th>';
         $this->content->text .= '</tr></thead><tbody></tbody>';
         $this->content->text .= '</table>';
+        $this->content->text .= '<div id="kaplan_courses_next" class="kaplan_courses_btn">next</div>';
+        $this->content->text .= '<div id="kaplan_courses_prev" class="kaplan_courses_btn">prev</div>';
         $this->content->text .= '<div class="courseloading_image"><img src="'.$CFG->wwwroot.'/pix/i/loading_small.gif"/></div>';
+        $this->content->text .= '</div>';
 
+        $this->content->text .= '<div id="kaplan_users">';
         $this->content->text .= '<h3>Users</h3>';
         $this->content->text .= '<table id="kaplan_user_table" class="kaplan_table">';
         $this->content->text .= '<thead><tr>';
         $this->content->text .= '<th>Id</th><th>Fullname</th>';
         $this->content->text .= '</tr></thead><tbody></tbody>';
         $this->content->text .= '</table>';
+        $this->content->text .= '<div id="kaplan_users_next" class="kaplan_users_btn">next</div>';
+        $this->content->text .= '<div id="kaplan_users_prev" class="kaplan_users_btn">prev</div>';
         $this->content->text .= '<div class="userloading_image"><img src="'.$CFG->wwwroot.'/pix/i/loading_small.gif"/></div>';
+        $this->content->text .= '</div>';
 
         //Setup and call the js
         $this->page->requires->js('/blocks/kaplan_plugin/kaplan_plugin.js');
-        $this->page->requires->js_function_call('kaplan_loadCourseTable', array('kaplan_course_table', $coursesurl));
-        $this->page->requires->js_function_call('kaplan_loadUserTable', array('kaplan_user_table', $usersurl));
-
+        $this->page->requires->js_function_call('kaplan_loadCourseTable', array('kaplan_course_table', $coursesurl, 0));
+        $this->page->requires->js_function_call('kaplan_loadUserTable', array('kaplan_user_table', $usersurl, 0));
+        $this->page->requires->js_function_call('kaplan_register_btns', array('kaplan_course_table', 'kaplan_user_table'));
 
         return $this->content;
     }

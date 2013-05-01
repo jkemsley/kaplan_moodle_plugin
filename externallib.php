@@ -9,7 +9,7 @@ class block_kaplan_plugin_external extends external_api {
      */
     public static function get_courses_custom_parameters() {
         return new external_function_parameters(
-            array()
+            array('page' => new external_value(PARAM_INT, 'Page number, default is 0"', VALUE_DEFAULT, 0))
         );
     }
 
@@ -17,13 +17,17 @@ class block_kaplan_plugin_external extends external_api {
      * Returns welcome message
      * @return string welcome message
      */
-    public static function get_courses_custom() {
+    public static function get_courses_custom($page = 0) {
         global $CFG, $DB, $USER;
         require_once($CFG->dirroot . "/course/lib.php");
 
+        $params = self::validate_parameters(self::get_courses_custom_parameters(),
+                array('page' => $page));
+
         //retrieve courses
-        $courses = $DB->get_records('course');
-        array_shift($courses);
+        $courses = $DB->get_records('course', array(), '', '*', $params['page'] * 5, 6);
+        
+        // if($params['page'] === 0){ array_shift($courses); }
 
         //create return value
         $coursesinfo = array();
@@ -83,7 +87,7 @@ class block_kaplan_plugin_external extends external_api {
 
     public static function get_users_custom_parameters() {
         return new external_function_parameters(
-            array()
+            array('page' => new external_value(PARAM_INT, 'Page number, default is 0"', VALUE_DEFAULT, 0))
         );
     }
 
@@ -91,12 +95,19 @@ class block_kaplan_plugin_external extends external_api {
      * Returns welcome message
      * @return string welcome message
      */
-    public static function get_users_custom() {
+    public static function get_users_custom($page = 0) {
         global $CFG, $DB, $USER;
 
+         $params = self::validate_parameters(self::get_users_custom_parameters(),
+                array('page' => $page));
+
         //retrieve courses
-        $users = $DB->get_records('user');
-        array_shift($users);
+         $sql = "select * from {user}
+                 where deleted != '1'
+                 limit " . ($params['page'] * 10) . ", 11";
+        $users = $DB->get_records_sql($sql);
+        
+        // if($params['page'] === 0){ array_shift($users); }
 
         //create return value
         $coursesinfo = array();
