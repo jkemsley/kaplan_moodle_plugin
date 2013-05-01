@@ -10,3 +10,4 @@ $string['noaccess'] = 'Notice: You do not have access to use this service';
 $string['wsnotfound'] = 'Notice: Kaplan plugin webservice not found';
 $string['wsnotenabled'] = 'Notice: Please enable webservices to use this block';
 $string['restnotenabled'] = 'Notice: Please enable rest webservice to use this block';
+$string['enablejs'] = 'Notice: You need javascript enabled to use this service';

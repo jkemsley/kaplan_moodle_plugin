@@ -132,7 +132,7 @@ class block_kaplan_plugin extends block_base {
         $this->content->text .= '</table>';
         $this->content->text .= '<div id="kaplan_courses_next" class="kaplan_courses_btn">next</div>';
         $this->content->text .= '<div id="kaplan_courses_prev" class="kaplan_courses_btn">prev</div>';
-        $this->content->text .= '<div class="courseloading_image"><img src="'.$CFG->wwwroot.'/pix/i/loading_small.gif"/></div>';
+        $this->content->text .= '<div class="courseloading_image"><p class="kaplan_notice">'.get_string('enablejs', 'block_kaplan_plugin').'</p></div>';
         $this->content->text .= '</div>';
 
         $this->content->text .= '<div id="kaplan_users">';
@@ -144,7 +144,7 @@ class block_kaplan_plugin extends block_base {
         $this->content->text .= '</table>';
         $this->content->text .= '<div id="kaplan_users_next" class="kaplan_users_btn">next</div>';
         $this->content->text .= '<div id="kaplan_users_prev" class="kaplan_users_btn">prev</div>';
-        $this->content->text .= '<div class="userloading_image"><img src="'.$CFG->wwwroot.'/pix/i/loading_small.gif"/></div>';
+        $this->content->text .= '<div class="userloading_image"><p class="kaplan_notice">'.get_string('enablejs', 'block_kaplan_plugin').'</p></div>';
         $this->content->text .= '</div>';
 
         //Setup and call the js

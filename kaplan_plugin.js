@@ -8,6 +8,8 @@ function kaplan_loadCourseTable(eid, url, page) {
     courseurl = url;
     url += '&page=' + page;
     cpage = page;
+
+    Y.one('.courseloading_image').setHTML('<img src="' + M.cfg.wwwroot + '/pix/i/loading_small.gif"/>');
     //Set the callback for yui ajax call
 	var callback = {
         timeout : 5000,
@@ -72,6 +74,8 @@ function kaplan_loadUserTable(eid, url, page) {
     upage = page;
     userurl = url;
     url += '&page=' + page;
+
+    Y.one('.userloading_image').setHTML('<img src="' + M.cfg.wwwroot + '/pix/i/loading_small.gif"/>');
 
 	var callback = {
         timeout : 5000,
