@@ -35,6 +35,10 @@
 			width: 50%;
 		}
 
+		.kaplan_table th.kap_table_fullname {
+			width: 60%;
+		}
+
 	.kaplan_table tr:nth-child(even) {
 		background: #e4e4e4;
 	}

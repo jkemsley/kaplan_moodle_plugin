@@ -25,7 +25,10 @@ class block_kaplan_plugin_external extends external_api {
                 array('page' => $page));
 
         //retrieve courses
-        $courses = $DB->get_records('course', array(), '', '*', $params['page'] * 5, 6);
+        $sql = "select * from {course}
+                where id != 1
+                limit " . ($params['page'] * 5) . ", 6";
+        $courses = $DB->get_records_sql($sql);
         
         // if($params['page'] === 0){ array_shift($courses); }
 
@@ -103,7 +106,7 @@ class block_kaplan_plugin_external extends external_api {
 
         //retrieve courses
          $sql = "select * from {user}
-                 where deleted != '1'
+                 where deleted != '1' and id != 1
                  limit " . ($params['page'] * 10) . ", 11";
         $users = $DB->get_records_sql($sql);
         

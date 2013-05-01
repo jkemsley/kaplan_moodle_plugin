@@ -139,7 +139,7 @@ class block_kaplan_plugin extends block_base {
         $this->content->text .= '<h3>Users</h3>';
         $this->content->text .= '<table id="kaplan_user_table" class="kaplan_table">';
         $this->content->text .= '<thead><tr>';
-        $this->content->text .= '<th>Id</th><th>Fullname</th>';
+        $this->content->text .= '<th class="kap_table_id">Id</th><th class="kap_table_fullname">Fullname</th>';
         $this->content->text .= '</tr></thead><tbody></tbody>';
         $this->content->text .= '</table>';
         $this->content->text .= '<div id="kaplan_users_next" class="kaplan_users_btn">next</div>';

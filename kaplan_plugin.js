@@ -36,8 +36,10 @@ function kaplan_loadCourseTable(eid, url, page) {
                     return;
                 }
 
+                var clength = courses.length === 6 ? 5 : courses.length;
+
                 // Loop through courses and create html
-                for (i=0, l=courses.length - 1; i < l; ++i) {
+                for (i=0, l=clength; i < l; ++i) {
                     var url = M.cfg.wwwroot + '/course/view.php?id=' + courses[i].id;
                 	html += '<tr>';
                     html += '<td>' + courses[i].id + '</td>';
@@ -99,8 +101,11 @@ function kaplan_loadUserTable(eid, url, page) {
                     return;
                 }
 
+
+                var ulength = users.length === 11 ? 10 : users.length;
+
                 // Loop through users and create html
-                for (i=0, l=users.length-1; i < l; ++i) {
+                for (i=0, l=ulength; i < l; ++i) {
                     var url = M.cfg.wwwroot + '/user/profile.php?id=' + users[i].id;
                 	html += '<tr>'
                     html += '<td>' + users[i].id + '</td>';
